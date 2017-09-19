@@ -2,38 +2,26 @@ package PiCar;
 
 import javafx.application.Application;
 
+import PiCar.Controllers.*;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.scene.control.*;
 
 public class Main extends Application {
 
-    private void pushed(Text actionTarget, TextField userTextField){
-        try {
-            Double x = Double.parseDouble(userTextField.getText());
-        } catch (NumberFormatException e) {
-            actionTarget.setFill(Color.FIREBRICK);
-            actionTarget.setText("Error: Please enter a number");
-            userTextField.clear();
-            userTextField.requestFocus();
-            return;
-        }
-        actionTarget.setFill(Color.GREEN);
-        actionTarget.setText("Doing stuff!");
-    }
-
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("Scenes/GasMenu.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Scenes/GasMenu.fxml"));
+        GridPane pane = loader.load();
 
-        Scene scene = new Scene(root, 300, 275);
+        GasInput gas = loader.getController();
+        gas.loadHandler(primaryStage, pane);
+        Scene scene = new Scene(pane);
 
         primaryStage.setTitle("FXML Gas input");
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
     }
 
