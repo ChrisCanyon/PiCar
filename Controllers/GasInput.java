@@ -1,26 +1,67 @@
 package PiCar.Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
-public class GasInput{
+
+public class GasInput {
 
     @FXML
-    private Button submit;
+    private TextField inputField;
 
     @FXML
-    private TextField gasInput;
+    private GridPane root;
 
     @FXML
-    void submitData(ActionEvent event) {
+    private Button enter;
+
+    @FXML
+    private Label errorLabel;
+    @FXML
+    void submitData() {
+        double value;
+        try {
+            value = Double.parseDouble(inputField.getText());
+        } catch (Throwable e){
+            errorLabel.setText("Please enter a number");
+            inputField.setText("");
+            inputField.requestFocus();
+            return;
+        }
+        //todo save data
+        errorLabel.setTextFill(Color.GREEN);
+        errorLabel.setText("Processing");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Scenes/HomeMenu.fxml"));
+        AnchorPane pane;
+        Stage stage = (Stage) root.getScene().getWindow();
+
+        try {
+            pane = loader.load();
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return;
+        }
+
+        stage.getScene().setRoot(pane);
+        stage.setTitle("Display");
 
     }
 
     @FXML
-    void keyHandler(ActionEvent event) {
-
+    void keyHandler(KeyEvent event) {
+        if(event.getCode().equals(KeyCode.ENTER)){
+            submitData();
+        }
     }
 
 }

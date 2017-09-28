@@ -4,25 +4,30 @@ import javafx.application.Application;
 
 import PiCar.Controllers.*;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Scenes/GasMenu.fxml"));
-        GridPane pane = loader.load();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Scenes/HomeMenu.fxml"));
+        AnchorPane pane = loader.load();
 
-        GasInput gas = loader.getController();
-        gas.loadHandler(primaryStage, pane);
         Scene scene = new Scene(pane);
 
-        primaryStage.setTitle("FXML Gas input");
+        primaryStage.setTitle("Display");
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
         primaryStage.show();
+
+
     }
 
     public static void main(String[] args) {
