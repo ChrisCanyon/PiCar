@@ -1,14 +1,11 @@
 package PiCar.Controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -16,16 +13,15 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import java.text.DecimalFormat;
 
 public class HomeMenu {
 
+
+    //FXML items
     @FXML
     private Label mphDisplay;
 
@@ -42,7 +38,7 @@ public class HomeMenu {
     private Label tripDisplay;
 
     @FXML
-    private ProgressBar fuelGuage;
+    private ProgressBar fuelGauge;
 
     @FXML
     private LineChart<?, ?> mphChart;
@@ -56,46 +52,106 @@ public class HomeMenu {
     @FXML
     private AnchorPane inputPane;
 
-    private Thread runner;
+    //Other Variables
+
+    private Thread UIUpdateTimer;
+
+    private Runnable displayRunnable;
+
+    private Runnable init;
+
+    private double mpg = 20;
+
+    private double tankSize = 20;
+
+    private double trip;
+
+    private DecimalFormat df = new DecimalFormat(".##");
+
+
+    private double milesTravelled;
+    //Non FXML functions
+
+    public HomeMenu(){
+
+        init = this::init;
+        //todo get saved for milesTravelled, mpgDisplay, tripDisplay...
+        milesTravelled = 135;
+        trip = 135;
+
+        UIUpdateTimer = new Thread(this::updateTimer);
+        displayRunnable = this::updateUI;
+        UIUpdateTimer.setName("Update Timer");
+        Platform.runLater(init);
+        UIUpdateTimer.start();
+    }
+
+    private void init(){
+        //todo set values for mpg
+        mpgDisplay.setText(df.format(mpg));
+        tripDisplay.setText(df.format(trip));
+    }
+
+    private void updateTimer(){
+        try {
+            while (true) {
+                Platform.runLater(displayRunnable);
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            System.out.println("interrupt caught\n");
+        }
+    }
+
+    private void updateUI(){
+        updateDistance();
+        updateFuelGauge();
+        updateMPH();
+    }
+
+    //todo use gps inputs
+    private void updateMPH(){
+        Double mph = Double.parseDouble(mphDisplay.getText());
+
+        mph += 1.23;
+        if(mph > 80.0){
+            mph = 30.0;
+        }
+        mphDisplay.setText(df.format(mph));
+    }
+
+    private void updateFuelGauge(){
+        double fuelLevel = (mpg * tankSize - milesTravelled) / (mpg * tankSize);
+        fuelGauge.setProgress(fuelLevel);
+        if(fuelLevel > .66) {
+            fuelGauge.setStyle("-fx-accent: green");
+        } else if (fuelLevel > .4){
+            fuelGauge.setStyle("-fx-accent: yellow");
+        } else if (fuelLevel > .2) {
+            fuelGauge.setStyle("-fx-accent: orange");
+        } else {
+            fuelGauge.setStyle("-fx-accent: red");
+        }
+    }
+
+
+    //todo get data from gps
+    private void updateDistance(){
+        double delta = .1;
+        milesTravelled += delta;
+        trip += delta;
+
+        tripDisplay.setText(df.format(trip));
+    }
+
+    //FXML Functions
     @FXML
     void keyHandler(ActionEvent event) {
     }
 
-    private void display(){
-        try {
-            while (true) {
-                updateMPH();
-                TimeUnit.SECONDS.sleep(1);
-            }
-        } catch (InterruptedException e) {
-        System.out.println("interrupt caught\n");
-        }
-    }
-
-    private void updateMPH(){
-        Double mph = Double.parseDouble(mphDisplay.getText());
-
-        mph *= 1.1;
-        if(mph > 80){
-            mph = 30.0;
-        }
-
-        Date date = new Date();
-        mphDisplay.setText(mph.toString());
-    }
-
-    public HomeMenu(){
-        final NumberAxis xAxis = new NumberAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        mphChart.getXAxis().setAutoRanging(true);
-        mphChart.getYAxis().setAutoRanging(true);
-
-        runner = new Thread(this::display);
-        runner.start();
-    }
-
     @FXML
     void resetTrip(ActionEvent event) {
+        trip = 0;
         tripDisplay.setText("0");
         //todo reset trip value to 0 where it is saved
     }
@@ -104,8 +160,6 @@ public class HomeMenu {
     void loadSettings(ActionEvent event) {
 
     }
-
-    private Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
 
     @FXML
     void loadGasMenu(ActionEvent event) {
@@ -120,7 +174,7 @@ public class HomeMenu {
         }
         stage.getScene().setRoot(pane);
         stage.setTitle("Gas Input");
-        runner.interrupt();
+        UIUpdateTimer.interrupt();
 
     }
 
