@@ -58,8 +58,6 @@ public class HomeMenu {
 
     private Runnable displayRunnable;
 
-    private Runnable init;
-
     private double mpg = 20;
 
     private double tankSize = 20;
@@ -74,7 +72,7 @@ public class HomeMenu {
 
     public HomeMenu(){
 
-        init = this::init;
+        Runnable init = this::init;
         //todo get saved for milesTravelled, mpgDisplay, tripDisplay...
         milesTravelled = 135;
         trip = 135;
@@ -123,9 +121,9 @@ public class HomeMenu {
     private void updateFuelGauge(){
         double fuelLevel = (mpg * tankSize - milesTravelled) / (mpg * tankSize);
         fuelGauge.setProgress(fuelLevel);
-        if(fuelLevel > .66) {
-            fuelGauge.setStyle("-fx-accent: green");
-        } else if (fuelLevel > .4){
+        if(fuelLevel > .5) {
+            fuelGauge.setStyle("-fx-accent: #10ff00");
+        } else if (fuelLevel > .35){
             fuelGauge.setStyle("-fx-accent: yellow");
         } else if (fuelLevel > .2) {
             fuelGauge.setStyle("-fx-accent: orange");
@@ -150,7 +148,7 @@ public class HomeMenu {
     }
 
     @FXML
-    void resetTrip(ActionEvent event) {
+    void resetTrip() {
         trip = 0;
         tripDisplay.setText("0");
         //todo reset trip value to 0 where it is saved

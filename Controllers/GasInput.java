@@ -10,7 +10,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
@@ -38,7 +37,7 @@ public class GasInput {
             inputField.requestFocus();
             return;
         }
-        //todo save data
+        //todo save data and reset distance travelled to 0;
         errorLabel.setTextFill(Color.GREEN);
         errorLabel.setText("Processing");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../Scenes/HomeMenu.fxml"));

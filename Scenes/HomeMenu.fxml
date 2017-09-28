@@ -20,7 +20,7 @@
         <items>
           <AnchorPane nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-color: black;">
                <children>
-                  <ProgressBar fx:id="fuelGauge" focusTraversable="false" opacity="0.88" prefHeight="718.0" prefWidth="180.0" progress="0.45" rotate="-90.0" scaleX="2.3" style="-fx-accent: #10ff00; -fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ProgressBar fx:id="fuelGauge" focusTraversable="false" opacity="1" prefHeight="718.0" prefWidth="180.0" progress="0.45" rotate="-90.0" scaleX="2.3" style="-fx-accent: #10ff00; -fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
