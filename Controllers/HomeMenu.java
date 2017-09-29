@@ -160,7 +160,7 @@ public class HomeMenu {
     }
 
     @FXML
-    void loadGasMenu(ActionEvent event) {
+    void loadGasMenu() {
         Stage stage = (Stage) inputPane.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../Scenes/GasMenu.fxml"));
         GridPane pane;
